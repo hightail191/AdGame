@@ -1,0 +1,32 @@
+version: "3"
+services:
+  db:
+    image: postgres:15.2
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  backend:
+    build: ./backend
+    command: npm start
+    volumes:
+      - ./backend:/app
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    command: npm start
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "4000:4000"
+volumes:
+  postgres_volume:
